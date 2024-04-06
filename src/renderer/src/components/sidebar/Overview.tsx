@@ -13,7 +13,7 @@ export const Overview = ({ open }) => {
           animate={{ x: '-13%' }}
           exit={{ x: '100%' }}
           transition={{ duration: 0.3 }}
-          className="fixed right-0 w-3/12 px-2 h-full -z-10"
+          className="fixed right-0 w-3/12 px-2 h-full z-50 mt-1"
         >
           <Card className="flex flex-col gap-2 content-center h-[90%]">
             <CardBody className="flex flex-col items-stretch gap-2">

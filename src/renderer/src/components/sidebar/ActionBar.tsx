@@ -3,11 +3,11 @@ import { RxArrowLeft, RxArrowRight, RxDotsHorizontal } from 'react-icons/rx'
 
 export const ActionBar = ({ open, toggle }) => {
   return (
-    <div className="z-50 flex flex-col gap-2 border-l border-divider p-1 bg-background h-full">
+    <div className="z-50 fixed right-0 flex flex-col gap-2 border-l border-divider p-1 bg-background h-full">
       <Button isIconOnly color="primary" variant="light" size="sm" onPress={() => toggle()}>
         {open ? <RxArrowRight /> : <RxArrowLeft />}
       </Button>
-      <Dropdown backdrop="blur">
+      <Dropdown backdrop="opaque">
         <DropdownTrigger>
           <Button isIconOnly color="primary" variant="light" size="sm">
             <RxDotsHorizontal />
