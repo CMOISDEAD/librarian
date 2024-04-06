@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Card, CardBody, Image } from '@nextui-org/react'
-
-const url =
-  'https://d28hgpri8am2if.cloudfront.net/book_images/onix/cvr9781668016138/holly-9781668016138_hr.jpg'
+import { Card, CardBody } from '@nextui-org/react'
+import { useLibraryStore } from '@renderer/store/store'
+import { Details } from './Details'
 
 export const Overview = ({ open }) => {
+  const { selectedBook: book } = useLibraryStore((state) => state)
+
   return (
     <AnimatePresence>
       {open && (
@@ -17,18 +18,13 @@ export const Overview = ({ open }) => {
         >
           <Card className="flex flex-col gap-2 content-center h-[90%]">
             <CardBody className="flex flex-col items-stretch gap-2">
-              <div className="self-center">
-                <Image
-                  isBlurred
-                  src={url}
-                  alt="book image cover"
-                  className="h-96 object-cover self-center"
-                />
-              </div>
-              <div>
-                <h3 className="text-lg font-bold text-content4">Description</h3>
-                <p className="text-sm">Book description.</p>
-              </div>
+              {book ? (
+                <Details book={book} />
+              ) : (
+                <div className="flex content-center items-center justify-center h-full">
+                  <p className="text-content4 text-sm">Select a book to view its details.</p>
+                </div>
+              )}
             </CardBody>
           </Card>
         </motion.aside>

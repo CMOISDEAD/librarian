@@ -1,12 +1,15 @@
 import { Card, CardBody, CardFooter, CardHeader, Image } from '@nextui-org/react'
 import { IBook } from '@renderer/global'
+import { useLibraryStore } from '@renderer/store/store'
 
 interface Props {
   book: IBook
 }
 
 export const Book = ({ book }: Props) => {
-  const handleSelect = () => {}
+  const { setSelectedBook } = useLibraryStore((state) => state)
+
+  const handleSelect = () => setSelectedBook(book)
 
   return (
     <Card isPressable className="w-60 h-[22rem]" onPress={handleSelect}>
