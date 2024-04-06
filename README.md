@@ -16,4 +16,4 @@
 > This is a work-in-progress and not the finished product.
 > Doomguy will be constantly updated and is not yet ready for its first release.
 
-> I am the literary equivalent of a Big Mac and fries.
+> The librarian is the torchbearer, inheriting the legacy of the next library's vision, nurturing its spirit, and guiding its evolution into the future.
