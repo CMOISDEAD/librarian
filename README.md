@@ -1,34 +1,19 @@
-# doom-librarian
+# Librarian
+<p align="center">
+  <img src="https://github.com/CMOISDEAD/librarian/assets/51010598/38916ba2-a22a-4397-bc17-8add2972c93a" />
+</p>
 
-An Electron application with React and TypeScript
+<div align="center">
 
-## Recommended IDE Setup
+![GitHub stars](https://img.shields.io/github/stars/cmoisdead/librarian)
+![GitHub issues](https://img.shields.io/github/issues/cmoisdead/librarian)
+![GitHub forks](https://img.shields.io/github/forks/cmoisdead/librarian)
+![GitHub license](https://img.shields.io/github/license/CMOISDEAD/librarian)
 
-- [VSCode](https://code.visualstudio.com/) + [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint) + [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+</div>
 
-## Project Setup
+> [!IMPORTANT]
+> This is a work-in-progress and not the finished product.
+> Doomguy will be constantly updated and is not yet ready for its first release.
 
-### Install
-
-```bash
-$ npm install
-```
-
-### Development
-
-```bash
-$ npm run dev
-```
-
-### Build
-
-```bash
-# For windows
-$ npm run build:win
-
-# For macOS
-$ npm run build:mac
-
-# For Linux
-$ npm run build:linux
-```
+> I am the literary equivalent of a Big Mac and fries.
