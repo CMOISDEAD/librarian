@@ -12,22 +12,15 @@ export const Book = ({ book }: Props) => {
   const handleSelect = () => setSelectedBook(book)
 
   return (
-    <Card isPressable className="w-60 h-[22rem]" onPress={handleSelect}>
-      <CardHeader>
+    <Card isPressable className="w-48 h-[20rem]" onPress={handleSelect}>
+      <CardBody className="p-0">
         <Image
           removeWrapper
           src={book.cover}
           alt={book.title}
-          className="w-full h-52 object-cover"
+          className="w-full h-full object-cover"
         />
-      </CardHeader>
-      <CardBody>
-        <h2 className="text-lg font-semibold truncate">{book.title}</h2>
-        <p className="text-sm text-gray-500">{book.author}</p>
       </CardBody>
-      <CardFooter>
-        <p className="text-sm text-gray-500">{book.year}</p>
-      </CardFooter>
     </Card>
   )
 }
