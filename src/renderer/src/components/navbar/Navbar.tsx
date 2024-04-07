@@ -10,18 +10,16 @@ import {
 } from '@nextui-org/react'
 import { useTheme } from 'next-themes'
 import { NotificationList } from './NotificationList'
-import toast from 'react-hot-toast'
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme()
 
   const handleThemeChange = () => {
-    toast.success(`Switched to ${theme === 'dark' ? 'light' : 'dark'} mode`)
     setTheme(theme === 'dark' ? 'light' : 'dark')
   }
 
   return (
-    <Bar shouldHideOnScroll maxWidth="full">
+    <Bar isBordered maxWidth="full">
       <NavbarBrand className="text-foreground gap-2" as={Link} href="/">
         <RxArchive />
         <p className="font-bold text-inherit">Librarian</p>

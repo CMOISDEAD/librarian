@@ -7,7 +7,7 @@ export const Layout = () => {
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <Outlet />
-      <Toaster />
+      <Toaster position="bottom-center" />
     </div>
   )
 }

@@ -18,16 +18,6 @@ const books = [
     pages: 328
   },
   {
-    title: 'The Great Gatsby',
-    author: 'F. Scott Fitzgerald',
-    description: 'A tale of love, wealth, and the American Dream set in the Roaring Twenties.',
-    cover:
-      'https://i0.wp.com/americanwritersmuseum.org/wp-content/uploads/2018/02/CK-3.jpg?resize=267%2C400&ssl=1',
-    year: 1925,
-    genre: 'Fiction',
-    pages: 180
-  },
-  {
     title: 'Pride and Prejudice',
     author: 'Jane Austen',
     description:

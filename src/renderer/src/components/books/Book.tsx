@@ -12,7 +12,7 @@ export const Book = ({ book }: Props) => {
   const handleSelect = () => setSelectedBook(book)
 
   return (
-    <Card isBlurred isPressable className="w-48 h-[20rem]" onPress={handleSelect}>
+    <Card isBlurred isPressable className="w-48 min-w-48 h-[20rem]" onPress={handleSelect}>
       <CardBody>
         <Image
           isBlurred
