@@ -1,7 +1,10 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
+import Store from 'electron-store'
 import icon from '../../resources/icon.png?asset'
+
+const store = new Store()
 
 function createWindow(): void {
   // Create the browser window.
@@ -49,12 +52,50 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'))
+  // Books handlers
+  ipcMain.on('save-books', (event, books) => {
+    store.set('books', books)
+    event.returnValue = store.get('books')
+  })
+
+  ipcMain.on('add-book', (event, book) => {
+    const books = store.get('books') as any[]
+    store.set('books', [...books, book])
+    event.returnValue = store.get('books')
+  })
+
+  ipcMain.on('get-books', (event) => {
+    event.returnValue = store.get('books')
+  })
+
+  ipcMain.on('delete-book', (event, book) => {
+    const books = store.get('books') as any[]
+    const newBooks = books.filter((b) => b.id !== book.id)
+    store.set('books', newBooks)
+    event.returnValue = store.get('books')
+  })
+
+  ipcMain.on('update-book', (event, book) => {
+    const books = store.get('books') as any[]
+    const newBooks = books.map((b) => (b.id === book.id ? book : b))
+    store.set('books', newBooks)
+    event.returnValue = store.get('books')
+  })
+
+  ipcMain.on('get-book', (event, id) => {
+    const books = store.get('books') as any[]
+    const book = books.find((b) => b.id === id)
+    event.returnValue = book
+  })
+
+  ipcMain.on('save-recent', (event, recent) => {
+    store.set('recents', recent)
+    event.returnValue = store.get('recents')
+  })
 
   createWindow()
 
-  app.on('activate', function () {
+  app.on('activate', function() {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
