@@ -1,5 +1,5 @@
-import { Card, CardBody, CardFooter, CardHeader, Image } from '@nextui-org/react'
 import { IBook } from '@renderer/global'
+import { Card, CardBody, Image } from '@nextui-org/react'
 import { useLibraryStore } from '@renderer/store/store'
 
 interface Props {
@@ -12,13 +12,16 @@ export const Book = ({ book }: Props) => {
   const handleSelect = () => setSelectedBook(book)
 
   return (
-    <Card isPressable className="w-48 h-[20rem]" onPress={handleSelect}>
-      <CardBody className="p-0">
+    <Card isBlurred isPressable className="w-48 h-[20rem]" onPress={handleSelect}>
+      <CardBody>
         <Image
-          removeWrapper
+          isBlurred
           src={book.cover}
           alt={book.title}
-          className="w-full h-full object-cover"
+          classNames={{
+            img: 'w-full h-full object-cover',
+            wrapper: 'w-full h-full'
+          }}
         />
       </CardBody>
     </Card>
