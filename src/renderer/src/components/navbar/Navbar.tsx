@@ -1,4 +1,4 @@
-import { RxArchive, RxBell, RxGear, RxMagnifyingGlass, RxMoon, RxSun } from 'react-icons/rx'
+import { RxArchive, RxGear, RxMagnifyingGlass, RxMoon, RxSun } from 'react-icons/rx'
 import {
   Navbar as Bar,
   Button,
@@ -9,11 +9,16 @@ import {
   NavbarItem
 } from '@nextui-org/react'
 import { useTheme } from 'next-themes'
+import { NotificationList } from './NotificationList'
+import toast from 'react-hot-toast'
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme()
 
-  const handleThemeChange = () => setTheme(theme === 'dark' ? 'light' : 'dark')
+  const handleThemeChange = () => {
+    toast.success(`Switched to ${theme === 'dark' ? 'light' : 'dark'} mode`)
+    setTheme(theme === 'dark' ? 'light' : 'dark')
+  }
 
   return (
     <Bar shouldHideOnScroll maxWidth="full">
@@ -28,9 +33,7 @@ export const Navbar = () => {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button isIconOnly color="primary" variant="flat">
-            <RxBell />
-          </Button>
+          <NotificationList />
         </NavbarItem>
         <NavbarItem>
           <Button isIconOnly color="primary" variant="flat" onPress={handleThemeChange}>

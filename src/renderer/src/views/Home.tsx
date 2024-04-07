@@ -1,4 +1,4 @@
-import { ListBooks } from '@renderer/components/books/ListBooks'
+import { ListBooks } from '@renderer/components/books/BooksList'
 import { Sidebar } from '@renderer/components/sidebar/Sidebar'
 
 export const Home = () => {
