@@ -1,5 +1,6 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
 import { RxArrowLeft, RxArrowRight, RxDotsHorizontal } from 'react-icons/rx'
+import { AddModal } from './addModal/AddModal'
 
 export const ActionBar = ({ open, toggle }) => {
   return (
@@ -7,6 +8,7 @@ export const ActionBar = ({ open, toggle }) => {
       <Button isIconOnly color="primary" variant="light" size="sm" onPress={() => toggle()}>
         {open ? <RxArrowRight /> : <RxArrowLeft />}
       </Button>
+      <AddModal />
       <Dropdown backdrop="opaque">
         <DropdownTrigger>
           <Button isIconOnly color="primary" variant="light" size="sm">

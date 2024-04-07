@@ -1,7 +1,9 @@
-import books from '../../utils/books'
+import { useLibraryStore } from '@renderer/store/store'
 import { Book } from './Book'
 
 export const ListBooks = () => {
+  const { books } = useLibraryStore((state) => state)
+
   return (
     <div className="my-1">
       <h2 className="text-2xl font-bold">On the shelf</h2>
