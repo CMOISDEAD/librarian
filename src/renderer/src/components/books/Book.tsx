@@ -7,6 +7,7 @@ interface Props {
 }
 
 export const Book = ({ book }: Props) => {
+  const openExternal = window.api.shell.openExternal
   const ipcHandler = window.electron.ipcRenderer
   const { setSelected } = useLibraryStore((state) => state)
 
@@ -15,8 +16,16 @@ export const Book = ({ book }: Props) => {
     setSelected(selected)
   }
 
+  const handleOpen = () => openExternal(`file://${book.path}`)
+
   return (
-    <Card isBlurred isPressable className="w-48 min-w-48 h-[20rem]" onPress={handleSelect}>
+    <Card
+      isBlurred
+      isPressable
+      className="w-48 min-w-48 h-[20rem]"
+      onPress={handleSelect}
+      onDoubleClick={handleOpen}
+    >
       <CardBody>
         <Image
           isBlurred

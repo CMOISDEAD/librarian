@@ -6,4 +6,5 @@ export interface IBook {
   cover: string
   year: number
   genre: string
+  path: string
 }

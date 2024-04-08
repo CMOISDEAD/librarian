@@ -3,19 +3,27 @@ import * as Yup from 'yup'
 import { Button, Image, Input } from '@nextui-org/react'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
+import { useState } from 'react'
+import { RxFilePlus } from 'react-icons/rx'
 
 export const Form = () => {
   const ipcHandle = window.electron.ipcRenderer
+  const [file, setFile] = useState<string | null>(null)
   const { setBooks } = useLibraryStore((state) => state)
   const { handleSubmit, values, errors, touched, getFieldProps } = useFormik({
     initialValues,
     validationSchema,
-    onSubmit: (values) => {
-      const books = ipcHandle.sendSync('add-book', values)
+    onSubmit: (book) => {
+      const books = ipcHandle.sendSync('add-book', { ...book, path: file })
       setBooks(books)
       toast.success('Book added')
     }
   })
+
+  const handlePath = () => {
+    const path = ipcHandle.sendSync('get-pdf-path')
+    setFile(path)
+  }
 
   return (
     <div className="flex gap-2">
@@ -72,17 +80,18 @@ export const Form = () => {
             isInvalid={touched.pages && !!errors.pages}
           // errorMessage={touched.path && errors.path}
           />
-          <Input
-            type="file"
-            label="Path"
+          <Button
+            fullWidth
+            variant="flat"
+            color="primary"
+            onPress={handlePath}
             className="h-full"
-            placeholder="Path"
-            {...getFieldProps('path')}
-            isInvalid={touched.path && !!errors.path}
-          // errorMessage={touched.path && errors.path}
-          />
+            startContent={<RxFilePlus />}
+          >
+            Select file
+          </Button>
         </div>
-        <Button color="primary" variant="flat" type="submit">
+        <Button color="primary" variant="flat" type="submit" isDisabled={!file}>
           Add
         </Button>
       </form>
@@ -126,6 +135,6 @@ const validationSchema = Yup.object({
   cover: Yup.string().url('invalid url').required('required'),
   year: Yup.number().min(0, 'min 0').required('required'),
   genre: Yup.string().min(3, 'min 3 characters').required('required'),
-  pages: Yup.number().min(0, 'min 0').required('required'),
-  path: Yup.string().required('required')
+  pages: Yup.number().min(0, 'min 0').required('required')
+  // path: Yup.string().required('required')
 })

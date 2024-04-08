@@ -109,6 +109,7 @@ app.whenReady().then(() => {
       filters: [{ name: 'Documents', extensions: ['pdf', 'docx', 'epub'] }]
     })
     if (!canceled) event.returnValue = filePaths[0]
+    else event.returnValue = null
   })
 
   ipcMain.on('save-selected', (event, selected) => {
