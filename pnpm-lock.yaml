@@ -64,6 +64,9 @@ devDependencies:
   '@types/react-dom':
     specifier: ^18.2.18
     version: 18.2.24
+  '@types/uuid':
+    specifier: ^9.0.8
+    version: 9.0.8
   '@vitejs/plugin-react':
     specifier: ^4.2.1
     version: 4.2.1(vite@5.2.8)
@@ -3570,6 +3573,10 @@ packages:
 
   /@types/semver@7.5.8:
     resolution: {integrity: sha512-I8EUhyrgfLrcTkzV3TSsGyl1tSuPrEDzr0yd5m90UgNxQkyDXULk3b6MlQqTCpZpNtWe1K0hzclnZkTcLBe2UQ==}
+    dev: true
+
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: true
 
   /@types/verror@1.10.10:

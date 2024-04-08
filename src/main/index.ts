@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid'
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
@@ -59,7 +60,8 @@ app.whenReady().then(() => {
   })
 
   ipcMain.on('add-book', (event, book) => {
-    const books = store.get('books') as any[]
+    const books = (store.get('books') as any[]) || []
+    book.id = uuidv4()
     store.set('books', [...books, book])
     event.returnValue = store.get('books')
   })
@@ -72,7 +74,15 @@ app.whenReady().then(() => {
     const books = store.get('books') as any[]
     const newBooks = books.filter((b) => b.id !== book.id)
     store.set('books', newBooks)
-    event.returnValue = store.get('books')
+    // check if the selected book is deleted
+    const selected: any = store.get('selected')
+    if (selected && selected.id === book.id) {
+      store.set('selected', null)
+    }
+    event.returnValue = {
+      books: store.get('books'),
+      selected: store.get('selected')
+    }
   })
 
   ipcMain.on('update-book', (event, book) => {
@@ -93,13 +103,31 @@ app.whenReady().then(() => {
     event.returnValue = store.get('recents')
   })
 
-  // get the path of a pdf file
   ipcMain.on('get-pdf-path', async (event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: [{ name: 'Documents', extensions: ['pdf', 'docx', 'epub'] }]
     })
     if (!canceled) event.returnValue = filePaths[0]
+  })
+
+  ipcMain.on('save-selected', (event, selected) => {
+    store.set('selected', selected)
+    event.returnValue = store.get('selected')
+  })
+
+  ipcMain.on('get-selected', (event) => {
+    event.returnValue = store.get('selected')
+  })
+
+  // return the store
+  ipcMain.on('get-store', (event) => {
+    event.returnValue = store.store
+  })
+
+  // clear data
+  ipcMain.on('clear-data', (_event) => {
+    store.clear()
   })
 
   createWindow()

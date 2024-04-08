@@ -5,13 +5,14 @@ import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
 
 export const Form = () => {
-  const { books, setBooks } = useLibraryStore((state) => state)
+  const ipcHandle = window.electron.ipcRenderer
+  const { setBooks } = useLibraryStore((state) => state)
   const { handleSubmit, values, errors, touched, getFieldProps } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: (values) => {
-      console.log(values)
-      setBooks([...books, values])
+      const books = ipcHandle.sendSync('add-book', values)
+      setBooks(books)
       toast.success('Book added')
     }
   })
@@ -68,7 +69,7 @@ export const Form = () => {
             label="Pages"
             placeholder="0"
             {...getFieldProps('pages')}
-            isInvalid={touched.path && !!errors.path}
+            isInvalid={touched.pages && !!errors.pages}
           // errorMessage={touched.path && errors.path}
           />
           <Input
