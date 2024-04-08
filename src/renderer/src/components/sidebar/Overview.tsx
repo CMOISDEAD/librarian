@@ -4,7 +4,7 @@ import { useLibraryStore } from '@renderer/store/store'
 import { Details } from './Details'
 
 export const Overview = ({ open }) => {
-  const { selectedBook: book } = useLibraryStore((state) => state)
+  const { selected: book } = useLibraryStore((state) => state)
 
   return (
     <AnimatePresence>

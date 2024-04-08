@@ -7,9 +7,13 @@ interface Props {
 }
 
 export const Book = ({ book }: Props) => {
-  const { setSelectedBook } = useLibraryStore((state) => state)
+  const ipcHandler = window.electron.ipcRenderer
+  const { setSelected } = useLibraryStore((state) => state)
 
-  const handleSelect = () => setSelectedBook(book)
+  const handleSelect = () => {
+    const selected: IBook = ipcHandler.sendSync('save-selected', book)
+    setSelected(selected)
+  }
 
   return (
     <Card isBlurred isPressable className="w-48 min-w-48 h-[20rem]" onPress={handleSelect}>

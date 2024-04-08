@@ -126,8 +126,9 @@ app.whenReady().then(() => {
   })
 
   // clear data
-  ipcMain.on('clear-data', (_event) => {
+  ipcMain.on('clear-data', (event) => {
     store.clear()
+    event.returnValue = store.store
   })
 
   createWindow()

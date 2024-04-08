@@ -12,6 +12,7 @@ function App() {
 
   useEffect(() => {
     const store = ipcHandle.sendSync('get-store')
+    console.log('store', store)
     setStore(store)
   }, [])
 

@@ -6,14 +6,13 @@ import toast from 'react-hot-toast'
 
 export const ActionBar = ({ open, toggle }) => {
   const ipcHandle = window.electron.ipcRenderer
-  const { selectedBook, setBooks, setSelectedBook } = useLibraryStore((state) => state)
+  const { selected: selectedBook, setBooks, setSelected } = useLibraryStore((state) => state)
 
   const handleDelete = () => {
     if (!selectedBook) return
     const { books, selected } = ipcHandle.sendSync('delete-book', selectedBook)
     setBooks(books)
-    console.log(selected)
-    setSelectedBook(selected)
+    setSelected(selected)
     toast.success('Book deleted successfully')
   }
 
