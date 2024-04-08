@@ -1,4 +1,4 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron'
+import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
@@ -91,6 +91,15 @@ app.whenReady().then(() => {
   ipcMain.on('save-recent', (event, recent) => {
     store.set('recents', recent)
     event.returnValue = store.get('recents')
+  })
+
+  // get the path of a pdf file
+  ipcMain.on('get-pdf-path', async (event) => {
+    const { canceled, filePaths } = await dialog.showOpenDialog({
+      properties: ['openFile'],
+      filters: [{ name: 'Documents', extensions: ['pdf', 'docx', 'epub'] }]
+    })
+    if (!canceled) event.returnValue = filePaths[0]
   })
 
   createWindow()
