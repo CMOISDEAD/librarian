@@ -1,49 +1,33 @@
-import { JSONSchemaType } from 'ajv'
-
-type BookType = {
-  id: string
-  title: string
-}
-
-export type SchemaType = {
-  books: BookType[]
-  recents: BookType[]
-  selected: BookType | null
-}
-
-// @ts-expect-error weird error
-export const schema: JSONSchemaType<SchemaType> = {
-  type: 'object',
-  properties: {
-    books: {
-      type: 'array',
-      default: [],
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          title: { type: 'string' }
-        }
-      }
-    },
-    recents: {
-      type: 'array',
-      default: [],
-      items: {
-        type: 'object',
-        properties: {
-          id: { type: 'string' },
-          title: { type: 'string' }
-        }
-      }
-    },
-    selected: {
+export const schema = {
+  books: {
+    type: 'array',
+    items: {
       type: 'object',
-      default: null,
+      properties: {
+        id: { type: 'string' },
+        title: { type: 'string' }
+      },
+      default: []
+    }
+  },
+  recents: {
+    type: 'array',
+    items: {
+      type: 'object',
       properties: {
         id: { type: 'string' },
         title: { type: 'string' }
       }
-    }
+    },
+    default: []
+  },
+  selected: {
+    type: 'object',
+    properties: {
+      id: { type: 'string' },
+      title: { type: 'string' }
+    },
+    default: null,
+    nullable: true
   }
-}
+} as const

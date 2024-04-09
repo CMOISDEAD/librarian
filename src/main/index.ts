@@ -3,11 +3,10 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
-import { SchemaType, schema } from './schema'
+import { schema } from './schema'
 import icon from '../../resources/icon.png?asset'
 
-// @ts-expect-error - Ignore the error because the type of store have bugs
-const store = new Store<SchemaType>({ schema })
+const store = new Store({ schema })
 
 function createWindow(): void {
   // Create the browser window.
