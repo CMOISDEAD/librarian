@@ -1,13 +1,22 @@
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
+import {
+  Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+  useDisclosure
+} from '@nextui-org/react'
 import { RxArrowLeft, RxArrowRight, RxDotsHorizontal } from 'react-icons/rx'
 import { AddBook } from '../addBook/AddBook'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
+import { UpdateBook } from '../addBook/UpdateBook'
 
 export const ActionBar = ({ open, toggle }) => {
   const shell = window.api.shell
   const ipcHandle = window.electron.ipcRenderer
   const { selected: selectedBook, setBooks, setSelected } = useLibraryStore((state) => state)
+  const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const handleDelete = () => {
     if (!selectedBook) return
@@ -38,12 +47,15 @@ export const ActionBar = ({ open, toggle }) => {
           <DropdownItem key="read" onPress={handleOpen}>
             Read
           </DropdownItem>
-          <DropdownItem key="edit">Edit</DropdownItem>
+          <DropdownItem key="edit" onPress={onOpen}>
+            Edit
+          </DropdownItem>
           <DropdownItem key="delete" onPress={handleDelete}>
             Delete
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>
+      <UpdateBook book={selectedBook!} isOpen={isOpen} onOpenChange={onOpenChange} />
     </div>
   )
 }

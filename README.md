@@ -33,3 +33,4 @@
 - [ ] Add dynamic Author and Genre creation based on previous entries
 - [ ] Add setting to settings page
 - [ ] Improve UI
+- [ ] selected book maybe should be a id reference and no the book object

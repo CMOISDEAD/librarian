@@ -1,5 +1,6 @@
 // book interface
 export interface IBook {
+  id?: String
   title: string
   author: string
   description: string

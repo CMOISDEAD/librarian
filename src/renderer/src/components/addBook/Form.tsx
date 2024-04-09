@@ -5,18 +5,26 @@ import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
 import { useState } from 'react'
 import { RxFilePlus } from 'react-icons/rx'
+import { IBook } from '@renderer/global'
 
-export const Form = () => {
+interface Props {
+  book?: IBook
+}
+
+export const Form = ({ book }: Props) => {
+  const isEdit = !!book
   const ipcHandle = window.electron.ipcRenderer
   const [file, setFile] = useState<string | null>(null)
   const { setBooks } = useLibraryStore((state) => state)
   const { handleSubmit, values, errors, touched, getFieldProps } = useFormik({
-    initialValues,
+    initialValues: book || initialValues,
     validationSchema,
-    onSubmit: (book) => {
-      const books = ipcHandle.sendSync('add-book', { ...book, path: file })
+    onSubmit: (values) => {
+      const books = isEdit
+        ? ipcHandle.sendSync('update-book', { ...values, path: file, id: book.id })
+        : ipcHandle.sendSync('add-book', { ...values, path: file })
       setBooks(books)
-      toast.success('Book added')
+      toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
     }
   })
 
