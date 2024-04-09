@@ -3,9 +3,11 @@ import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
+import { SchemaType, schema } from './schema'
 import icon from '../../resources/icon.png?asset'
 
-const store = new Store()
+// @ts-expect-error - Ignore the error because the type of store have bugs
+const store = new Store<SchemaType>({ schema })
 
 function createWindow(): void {
   // Create the browser window.
@@ -53,23 +55,28 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // Books handlers
+  // handlers
+
+  // save the books
   ipcMain.on('save-books', (event, books) => {
     store.set('books', books)
     event.returnValue = store.get('books')
   })
 
+  // add a book
   ipcMain.on('add-book', (event, book) => {
-    const books = (store.get('books') as any[]) || []
+    const books = store.get('books') || []
     book.id = uuidv4()
     store.set('books', [...books, book])
     event.returnValue = store.get('books')
   })
 
+  // get all books
   ipcMain.on('get-books', (event) => {
     event.returnValue = store.get('books')
   })
 
+  // delete the book
   ipcMain.on('delete-book', (event, book) => {
     const books = store.get('books') as any[]
     const newBooks = books.filter((b) => b.id !== book.id)
@@ -85,6 +92,7 @@ app.whenReady().then(() => {
     }
   })
 
+  // update the book
   ipcMain.on('update-book', (event, book) => {
     const books = store.get('books') as any[]
     const newBooks = books.map((b) => (b.id === book.id ? book : b))
@@ -92,17 +100,20 @@ app.whenReady().then(() => {
     event.returnValue = store.get('books')
   })
 
+  // get the book by id
   ipcMain.on('get-book', (event, id) => {
     const books = store.get('books') as any[]
     const book = books.find((b) => b.id === id)
     event.returnValue = book
   })
 
+  // save the recent books
   ipcMain.on('save-recent', (event, recent) => {
     store.set('recents', recent)
     event.returnValue = store.get('recents')
   })
 
+  // manage the pdf path
   ipcMain.on('get-pdf-path', async (event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],
@@ -112,11 +123,13 @@ app.whenReady().then(() => {
     else event.returnValue = null
   })
 
+  // save the selected book
   ipcMain.on('save-selected', (event, selected) => {
     store.set('selected', selected)
     event.returnValue = store.get('selected')
   })
 
+  // return the selected book
   ipcMain.on('get-selected', (event) => {
     event.returnValue = store.get('selected')
   })
