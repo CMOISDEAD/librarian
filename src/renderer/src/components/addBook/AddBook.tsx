@@ -10,7 +10,7 @@ import {
 import { RxPlus } from 'react-icons/rx'
 import { Form } from './Form'
 
-export const AddModal = () => {
+export const AddBook = () => {
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   return (

@@ -14,7 +14,7 @@ export const Details = ({ book }: { book: IBook }) => {
         />
       </div>
       <div className="flex-grow">
-        <h3 className="text-lg font-bold text-gray-500">Description</h3>
+        <h2 className="text-xl font-bold">{book.title}</h2>
         <p className="text-sm">{book.description}</p>
       </div>
       <ul className="text-gray-500">

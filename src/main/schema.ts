@@ -6,9 +6,9 @@ export const schema = {
       properties: {
         id: { type: 'string' },
         title: { type: 'string' }
-      },
-      default: []
-    }
+      }
+    },
+    default: []
   },
   recents: {
     type: 'array',

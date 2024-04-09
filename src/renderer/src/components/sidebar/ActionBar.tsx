@@ -1,10 +1,11 @@
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from '@nextui-org/react'
 import { RxArrowLeft, RxArrowRight, RxDotsHorizontal } from 'react-icons/rx'
-import { AddModal } from '../addModal/AddModal'
+import { AddBook } from '../addBook/AddBook'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
 
 export const ActionBar = ({ open, toggle }) => {
+  const shell = window.api.shell
   const ipcHandle = window.electron.ipcRenderer
   const { selected: selectedBook, setBooks, setSelected } = useLibraryStore((state) => state)
 
@@ -16,12 +17,17 @@ export const ActionBar = ({ open, toggle }) => {
     toast.success('Book deleted successfully')
   }
 
+  const handleOpen = () => {
+    if (!selectedBook) return
+    shell.openExternal(`file://${selectedBook.path}`)
+  }
+
   return (
     <div className="z-50 fixed right-0 flex flex-col gap-2 border-l border-divider p-1 bg-background/70 backdrop-blur-lg backdrop-saturate-150 h-full">
       <Button isIconOnly color="primary" variant="light" size="sm" onPress={() => toggle()}>
         {open ? <RxArrowRight /> : <RxArrowLeft />}
       </Button>
-      <AddModal />
+      <AddBook />
       <Dropdown backdrop="opaque">
         <DropdownTrigger>
           <Button isIconOnly color="primary" variant="light" size="sm" isDisabled={!selectedBook}>
@@ -29,7 +35,9 @@ export const ActionBar = ({ open, toggle }) => {
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label="Book Actions">
-          <DropdownItem key="read">Read</DropdownItem>
+          <DropdownItem key="read" onPress={handleOpen}>
+            Read
+          </DropdownItem>
           <DropdownItem key="edit">Edit</DropdownItem>
           <DropdownItem key="delete" onPress={handleDelete}>
             Delete
