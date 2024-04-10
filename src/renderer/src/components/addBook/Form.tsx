@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import { Button, Image, Input } from '@nextui-org/react'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { RxFilePlus } from 'react-icons/rx'
 import { IBook } from '@renderer/global'
 
@@ -14,15 +14,14 @@ interface Props {
 export const Form = ({ book }: Props) => {
   const isEdit = !!book
   const ipcHandle = window.electron.ipcRenderer
-  const [file, setFile] = useState<string | null>(null)
   const { setBooks, setSelected } = useLibraryStore((state) => state)
-  const { handleSubmit, values, errors, touched, getFieldProps } = useFormik({
+  const { handleSubmit, values, errors, touched, getFieldProps, setFieldValue } = useFormik({
     initialValues: book || initialValues,
     validationSchema,
     onSubmit: (values) => {
       const books = isEdit
-        ? ipcHandle.sendSync('update-book', { ...values, path: file, id: book.id })
-        : ipcHandle.sendSync('add-book', { ...values, path: file })
+        ? ipcHandle.sendSync('update-book', { ...values, id: book.id })
+        : ipcHandle.sendSync('add-book', { ...values })
       setBooks(books)
       toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
       if (book) {
@@ -32,9 +31,14 @@ export const Form = ({ book }: Props) => {
     }
   })
 
+  useEffect(() => {
+    if (!book) return
+    setFieldValue('path', book.path)
+  }, [])
+
   const handlePath = () => {
     const path = ipcHandle.sendSync('get-pdf-path')
-    setFile(path)
+    setFieldValue('path', path)
   }
 
   return (
@@ -103,8 +107,8 @@ export const Form = ({ book }: Props) => {
             Select file
           </Button>
         </div>
-        <Button color="primary" variant="flat" type="submit" isDisabled={!file}>
-          Add
+        <Button color="primary" variant="flat" type="submit">
+          {book ? 'Update Book' : 'Add Book'}
         </Button>
       </form>
       <Image
@@ -147,6 +151,6 @@ const validationSchema = Yup.object({
   cover: Yup.string().url('invalid url').required('required'),
   year: Yup.number().min(0, 'min 0').required('required'),
   genre: Yup.string().min(3, 'min 3 characters').required('required'),
-  pages: Yup.number().min(0, 'min 0').required('required')
-  // path: Yup.string().required('required')
+  pages: Yup.number().min(0, 'min 0').required('required'),
+  path: Yup.string().required('required')
 })
