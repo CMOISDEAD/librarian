@@ -15,7 +15,7 @@ export const Form = ({ book }: Props) => {
   const isEdit = !!book
   const ipcHandle = window.electron.ipcRenderer
   const [file, setFile] = useState<string | null>(null)
-  const { setBooks } = useLibraryStore((state) => state)
+  const { setBooks, setSelected } = useLibraryStore((state) => state)
   const { handleSubmit, values, errors, touched, getFieldProps } = useFormik({
     initialValues: book || initialValues,
     validationSchema,
@@ -25,6 +25,10 @@ export const Form = ({ book }: Props) => {
         : ipcHandle.sendSync('add-book', { ...values, path: file })
       setBooks(books)
       toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
+      if (book) {
+        const selected = ipcHandle.sendSync('get-selected')
+        setSelected(selected)
+      }
     }
   })
 

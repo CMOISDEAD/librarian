@@ -54,8 +54,13 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // handlers
+  // check if the id passed is the selected book
+  const checkSelected = (id: string) => {
+    const slected: any = store.get('selected')
+    return slected && slected.id === id
+  }
 
+  // handlers
   // save the books
   ipcMain.on('save-books', (event, books) => {
     store.set('books', books)
@@ -80,9 +85,7 @@ app.whenReady().then(() => {
     const books = store.get('books') as any[]
     const newBooks = books.filter((b) => b.id !== book.id)
     store.set('books', newBooks)
-    // check if the selected book is deleted
-    const selected: any = store.get('selected')
-    if (selected && selected.id === book.id) {
+    if (checkSelected(book.id)) {
       store.set('selected', null)
     }
     event.returnValue = {
@@ -96,6 +99,9 @@ app.whenReady().then(() => {
     const books = store.get('books') as any[]
     const newBooks = books.map((b) => (b.id === book.id ? book : b))
     store.set('books', newBooks)
+    if (checkSelected(book.id)) {
+      store.set('selected', book)
+    }
     event.returnValue = store.get('books')
   })
 
