@@ -60,6 +60,17 @@ app.whenReady().then(() => {
     return slected && slected.id === id
   }
 
+  const checkRecents = (id: string) => {
+    const recents: any = store.get('recents') || []
+    return recents.some((r: any) => r.id === id)
+  }
+
+  const mapRecents = (book: any) => {
+    const recents: any = store.get('recents') || []
+    const newRecents = recents.map((r: any) => (r.id === book.id ? book : r))
+    store.set('recents', newRecents)
+  }
+
   // handlers
   // save the books
   ipcMain.on('save-books', (event, books) => {
@@ -69,7 +80,7 @@ app.whenReady().then(() => {
 
   // add a book
   ipcMain.on('add-book', (event, book) => {
-    const books = store.get('books') || []
+    const books: any = store.get('books') || []
     book.id = uuidv4()
     store.set('books', [...books, book])
     event.returnValue = store.get('books')
@@ -88,6 +99,13 @@ app.whenReady().then(() => {
     if (checkSelected(book.id)) {
       store.set('selected', null)
     }
+    if (checkRecents(book.id)) {
+      const recents: any = store.get('recents') || []
+      store.set(
+        'recents',
+        recents.filter((r: any) => r.id !== book.id)
+      )
+    }
     event.returnValue = {
       books: store.get('books'),
       selected: store.get('selected')
@@ -99,9 +117,8 @@ app.whenReady().then(() => {
     const books = store.get('books') as any[]
     const newBooks = books.map((b) => (b.id === book.id ? book : b))
     store.set('books', newBooks)
-    if (checkSelected(book.id)) {
-      store.set('selected', book)
-    }
+    if (checkSelected(book.id)) store.set('selected', book)
+    if (checkRecents(book.id)) mapRecents(book)
     event.returnValue = store.get('books')
   })
 
@@ -137,6 +154,19 @@ app.whenReady().then(() => {
   // return the selected book
   ipcMain.on('get-selected', (event) => {
     event.returnValue = store.get('selected')
+  })
+
+  // return the recents books
+  ipcMain.on('get-recents', (event) => {
+    event.returnValue = store.get('recents')
+  })
+
+  // add a recent book
+  ipcMain.on('add-recent', (event, book) => {
+    const recents: any = store.get('recents') || []
+    const newRecents = recents.filter((r: any) => r.id !== book.id).slice(0, 5)
+    store.set('recents', [book, ...newRecents])
+    event.returnValue = store.get('recents')
   })
 
   // return the store

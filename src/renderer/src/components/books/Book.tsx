@@ -9,14 +9,18 @@ interface Props {
 export const Book = ({ book }: Props) => {
   const openExternal = window.api.shell.openExternal
   const ipcHandler = window.electron.ipcRenderer
-  const { setSelected } = useLibraryStore((state) => state)
+  const { setSelected, setRecents } = useLibraryStore((state) => state)
 
   const handleSelect = () => {
     const selected: IBook = ipcHandler.sendSync('save-selected', book)
     setSelected(selected)
   }
 
-  const handleOpen = () => openExternal(`file://${book.path}`)
+  const handleOpen = () => {
+    openExternal(`file://${book.path}`)
+    const recents = ipcHandler.sendSync('add-recent', book)
+    setRecents(recents)
+  }
 
   return (
     <Card

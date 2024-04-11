@@ -15,13 +15,20 @@ import { UpdateBook } from '../addBook/UpdateBook'
 export const ActionBar = ({ open, toggle }) => {
   const shell = window.api.shell
   const ipcHandle = window.electron.ipcRenderer
-  const { selected: selectedBook, setBooks, setSelected } = useLibraryStore((state) => state)
+  const {
+    selected: selectedBook,
+    setBooks,
+    setSelected,
+    setRecents
+  } = useLibraryStore((state) => state)
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const handleDelete = () => {
     if (!selectedBook) return
     const { books, selected } = ipcHandle.sendSync('delete-book', selectedBook)
+    const recents = ipcHandle.sendSync('get-recents')
     setBooks(books)
+    setRecents(recents)
     setSelected(selected)
     toast.success('Book deleted successfully')
   }

@@ -14,7 +14,7 @@ interface Props {
 export const Form = ({ book }: Props) => {
   const isEdit = !!book
   const ipcHandle = window.electron.ipcRenderer
-  const { setBooks, setSelected } = useLibraryStore((state) => state)
+  const { setBooks, setSelected, setRecents } = useLibraryStore((state) => state)
   const { handleSubmit, values, errors, touched, getFieldProps, setFieldValue } = useFormik({
     initialValues: book || initialValues,
     validationSchema,
@@ -26,7 +26,9 @@ export const Form = ({ book }: Props) => {
       toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
       if (book) {
         const selected = ipcHandle.sendSync('get-selected')
+        const recents = ipcHandle.sendSync('get-recents')
         setSelected(selected)
+        setRecents(recents)
       }
     }
   })
