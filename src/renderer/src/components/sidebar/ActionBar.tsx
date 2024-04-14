@@ -57,7 +57,7 @@ export const ActionBar = ({ open, toggle }) => {
           <DropdownItem key="edit" onPress={onOpen}>
             Edit
           </DropdownItem>
-          <DropdownItem key="delete" onPress={handleDelete}>
+          <DropdownItem key="delete" variant="flat" color="danger" onPress={handleDelete}>
             Delete
           </DropdownItem>
         </DropdownMenu>
