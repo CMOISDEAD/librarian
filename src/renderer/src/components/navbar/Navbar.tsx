@@ -20,9 +20,11 @@ export const Navbar = () => {
 
   return (
     <Bar isBordered maxWidth="full">
-      <NavbarBrand className="text-foreground gap-2" as={Link} href="/">
-        <RxArchive />
-        <p className="font-bold text-inherit">Librarian</p>
+      <NavbarBrand className="text-foreground gap-2">
+        <Link href="/" className="gap-2 text-foreground">
+          <RxArchive />
+          <p className="font-bold text-inherit">Librarian</p>
+        </Link>
       </NavbarBrand>
       <NavbarContent justify="center">
         <NavbarItem>

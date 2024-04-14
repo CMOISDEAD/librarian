@@ -1,10 +1,10 @@
 {
   "name": "doom-librarian",
   "version": "1.0.0",
-  "description": "An Electron application with React and TypeScript",
+  "description": "An Electron application to read and manage all your books.",
   "main": "./out/main/index.js",
-  "author": "example.com",
-  "homepage": "https://electron-vite.org",
+  "author": "CMOISDEAD",
+  "homepage": "https://github.com/CMOISDEAD/librarian",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
