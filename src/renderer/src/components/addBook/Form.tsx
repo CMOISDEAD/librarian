@@ -73,6 +73,7 @@ export const Form = ({ book }: { book?: Book }) => {
           label="Author"
           variant="flat"
           defaultItems={authors.map((author) => ({ label: author.name, value: author.name }))}
+          defaultSelectedKey={book?.author.name}
           onInputChange={(value) => setValue('author', value)}
           isInvalid={touched.author && !!errors.author}
         >
@@ -105,6 +106,7 @@ export const Form = ({ book }: { book?: Book }) => {
               label: category.name,
               value: category.name
             }))}
+            defaultSelectedKey={book?.category.name}
             onInputChange={(value) => setValue('category', value)}
             isInvalid={touched.category && !!errors.category}
           >
