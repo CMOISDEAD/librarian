@@ -5,8 +5,8 @@ export const Settings = () => {
   const ipcHandler = window.electron.ipcRenderer
   const { setStore } = useLibraryStore((state) => state)
 
-  const handleRemove = () => {
-    const def = ipcHandler.sendSync('clear-data')
+  const handleRemove = async () => {
+    const def = await ipcHandler.invoke('clear-data')
     setStore(def)
   }
 

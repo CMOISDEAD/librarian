@@ -40,24 +40,22 @@ export const Form = ({ book }: { book?: Book }) => {
     setValue('category', book.category.name)
   }, [])
 
-  const onSubmit: SubmitHandler<Inputs> = (values) => {
-    console.log('values', values)
+  const onSubmit: SubmitHandler<Inputs> = async (values) => {
     const books = isEdit
-      ? ipcHandle.sendSync('update-book', { ...values, id: book.id })
-      : ipcHandle.sendSync('add-book', { ...values })
-    console.log(books)
+      ? await ipcHandle.invoke('update-book', { ...values, id: book.id })
+      : await ipcHandle.invoke('add-book', { ...values })
     setBooks(books)
     toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
     if (book) {
-      const selected = ipcHandle.sendSync('get-selected')
-      const recents = ipcHandle.sendSync('get-recents')
+      const selected = await ipcHandle.invoke('get-selected')
+      const recents = await ipcHandle.invoke('get-recents')
       setSelected(selected)
       setRecents(recents)
     }
   }
 
-  const handlePath = () => {
-    const path = ipcHandle.sendSync('get-pdf-path')
+  const handlePath = async () => {
+    const path = await ipcHandle.invoke('get-pdf-path')
     setValue('path', path)
   }
 
@@ -67,7 +65,7 @@ export const Form = ({ book }: { book?: Book }) => {
         <Input
           label="Title"
           placeholder="Title"
-          {...register('title', { required: true, minLength: 3 })}
+          {...register('title', { required: true, minLength: 2 })}
           isInvalid={touched.title && !!errors.title}
         />
         <Autocomplete

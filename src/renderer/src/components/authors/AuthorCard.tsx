@@ -10,7 +10,7 @@ import {
 import { Author } from '@renderer/global'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
-import { RxPencil2, RxTrash } from 'react-icons/rx'
+import { RxTrash } from 'react-icons/rx'
 import { UpdateAuthor } from './UpdateAuthor'
 
 interface Props {
@@ -21,8 +21,8 @@ export const AuthorCard = ({ author }: Props) => {
   const ipcHandle = window.electron.ipcRenderer
   const { setAuthors } = useLibraryStore((state) => state)
 
-  const handleRemove = () => {
-    const authors = ipcHandle.sendSync('delete-author', author.id)
+  const handleRemove = async () => {
+    const authors = await ipcHandle.invoke('delete-author', author.id)
     setAuthors(authors)
     toast.success('Author removed successfully')
   }

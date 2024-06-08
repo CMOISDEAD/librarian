@@ -15,7 +15,7 @@ export const Details = ({ book }: { book: Book }) => {
       </div>
       <div className="flex-grow">
         <h2 className="text-xl font-bold">{book.title}</h2>
-        <p className="text-sm">{book.description}</p>
+        <p className="text-sm line-clamp-6">{book.description}</p>
       </div>
       <ul className="text-gray-500">
         <li className="flex gap-2 content-center items-center">

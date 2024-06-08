@@ -11,14 +11,14 @@ export const Book = ({ book }: Props) => {
   const ipcHandler = window.electron.ipcRenderer
   const { setSelected, setRecents } = useLibraryStore((state) => state)
 
-  const handleSelect = () => {
-    const selected: IBook = ipcHandler.sendSync('save-selected', book.id)
+  const handleSelect = async () => {
+    const selected = await ipcHandler.invoke('save-selected', book.id)
     setSelected(selected)
   }
 
-  const handleOpen = () => {
+  const handleOpen = async () => {
     openExternal(`file://${book.path}`)
-    const recents = ipcHandler.sendSync('add-recent', book)
+    const recents = await ipcHandler.invoke('add-recent', book)
     setRecents(recents)
   }
 

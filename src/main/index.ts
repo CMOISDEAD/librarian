@@ -65,10 +65,13 @@ app.whenReady().then(() => {
     return books
   }
 
-  // handlers
-  // TODO: Migrate all this logic to prisma and
+  /*
+   * HANDLERS
+   */
 
-  ipcMain.on('get-store', async (event) => {
+  // TODO: Migrate all this logic to prisma.
+
+  ipcMain.handle('get-store', async (_event) => {
     const authors = await prisma.author.findMany()
     const categories = await prisma.category.findMany()
     const books = await getBooks()
@@ -79,32 +82,32 @@ app.whenReady().then(() => {
         category: true
       }
     })
-    event.returnValue = { authors, categories, books, selected }
+    return { authors, categories, books, selected }
   })
 
-  ipcMain.on('get-authors', async (event) => {
+  ipcMain.handle('get-authors', async (_event) => {
     const authors = await prisma.author.findMany()
-    event.returnValue = authors
+    return authors
   })
 
-  ipcMain.on('get-author', async (event, id) => {
+  ipcMain.handle('get-author', async (_event, id) => {
     const author = await prisma.author.findUnique({ where: { id } })
-    event.returnValue = author
+    return author
   })
 
-  ipcMain.on('add-author', async (event, author) => {
+  ipcMain.handle('add-author', async (_event, author) => {
     await prisma.author.create({ data: author })
     const all = await prisma.author.findMany()
-    event.returnValue = all
+    return all
   })
 
-  ipcMain.on('delete-author', async (event, id) => {
+  ipcMain.handle('delete-author', async (_event, id) => {
     await prisma.author.delete({ where: { id } })
     const all = await prisma.author.findMany()
-    event.returnValue = all
+    return all
   })
 
-  ipcMain.on('update-author', async (event, author) => {
+  ipcMain.handle('update-author', async (_event, author) => {
     await prisma.author.update({
       where: {
         id: author.id
@@ -113,10 +116,10 @@ app.whenReady().then(() => {
     })
 
     const authors = await prisma.author.findMany()
-    event.returnValue = authors
+    return authors
   })
 
-  ipcMain.on('save-selected', async (event, id) => {
+  ipcMain.handle('save-selected', async (_event, id) => {
     await prisma.book.updateMany({
       where: {
         selected: true
@@ -137,10 +140,11 @@ app.whenReady().then(() => {
         category: true
       }
     })
-    event.returnValue = book
+
+    return book
   })
 
-  ipcMain.on('get-selected', async (event) => {
+  ipcMain.handle('get-selected', async (_event) => {
     const book = await prisma.book.findFirst({
       where: {
         selected: true
@@ -150,20 +154,20 @@ app.whenReady().then(() => {
         category: true
       }
     })
-    event.returnValue = book
+    return book
   })
 
-  ipcMain.on('get-book', async (event, id) => {
+  ipcMain.handle('get-book', async (_event, id) => {
     const book = await prisma.book.findUnique({ where: { id } })
-    event.returnValue = book
+    return book
   })
 
-  ipcMain.on('get-books', async (event) => {
+  ipcMain.handle('get-books', async (_event) => {
     const books = await getBooks()
-    event.returnValue = books
+    return books
   })
 
-  ipcMain.on('add-book', async (event, book) => {
+  ipcMain.handle('add-book', async (_event, book) => {
     const authorId = book.author
     console.log(authorId)
     delete book.author
@@ -190,17 +194,17 @@ app.whenReady().then(() => {
     })
 
     const books = await getBooks()
-    event.returnValue = books
+    return books
   })
 
-  ipcMain.on('delete-book', async (event, id) => {
+  ipcMain.handle('delete-book', async (_event, id) => {
     await prisma.book.delete({ where: { id } })
 
     const books = await getBooks()
-    event.returnValue = books
+    return books
   })
 
-  ipcMain.on('update-book', async (event, book) => {
+  ipcMain.handle('update-book', async (_event, book) => {
     const id = book.id
     const author = book.author
     delete book.id
@@ -232,58 +236,55 @@ app.whenReady().then(() => {
     })
 
     const books = await getBooks()
-    event.returnValue = books
+    return books
   })
 
-  ipcMain.on('get-categories', async (event) => {
+  ipcMain.handle('get-categories', async (_event) => {
     const categories = await prisma.category.findMany()
-    event.returnValue = categories
+    return categories
   })
 
   //FIX: OLD METHODS still on use...
-  ipcMain.on('save-books', (event, books) => {
+  ipcMain.handle('save-books', (_event, books) => {
     store.set('books', books)
-    event.returnValue = store.get('books')
+    return store.get('books')
   })
 
   // save the recent books
-  ipcMain.on('save-recent', (event, recent) => {
+  ipcMain.handle('save-recent', (_event, recent) => {
     store.set('recents', recent)
-    event.returnValue = store.get('recents')
+    return store.get('recents')
   })
 
   // manage the pdf path
-  ipcMain.on('get-pdf-path', async (event) => {
+  ipcMain.handle('get-pdf-path', async (_event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],
       filters: [{ name: 'Documents', extensions: ['pdf', 'docx', 'epub'] }]
     })
-    if (!canceled) event.returnValue = filePaths[0]
-    else event.returnValue = null
+    if (!canceled) return filePaths[0]
+    else return null
   })
 
   // return the recents books
-  ipcMain.on('get-recents', (event) => {
-    event.returnValue = store.get('recents')
+  ipcMain.handle('get-recents', (_event) => {
+    return store.get('recents')
   })
 
   // add a recent book
-  ipcMain.on('add-recent', (event, book) => {
-    const recents: any = store.get('recents') || []
-    const newRecents = recents.filter((r: any) => r.id !== book.id).slice(0, 5)
-    store.set('recents', [book, ...newRecents])
-    event.returnValue = store.get('recents')
+  ipcMain.handle('add-recent', (_event) => {
+    return []
   })
 
   // clear data
-  ipcMain.on('clear-data', async (event) => {
+  ipcMain.handle('clear-data', async (_event) => {
     store.clear()
-    event.returnValue = store.store
+    return store.store
   })
 
   createWindow()
 
-  app.on('activate', function () {
+  app.on('activate', function() {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

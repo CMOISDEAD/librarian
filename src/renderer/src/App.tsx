@@ -12,9 +12,13 @@ function App() {
   const { setStore } = useLibraryStore((state) => state)
 
   useEffect(() => {
-    const store = ipcHandle.sendSync('get-store')
-    console.log('store', store)
-    setStore(store)
+    ipcHandle
+      .invoke('get-store')
+      .then((store) => {
+        console.log('store', store)
+        setStore(store)
+      })
+      .catch((e) => console.error(e))
   }, [])
 
   return (

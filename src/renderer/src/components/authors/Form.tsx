@@ -22,16 +22,19 @@ export const Form = ({ author }: { author?: Author }) => {
   const ipcHandle = window.electron.ipcRenderer
   const { setAuthors } = useLibraryStore((state) => state)
 
-  const onSubmit: SubmitHandler<Inputs> = (data) => {
+  const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const authors = isEdit
-      ? ipcHandle.sendSync('update-author', { ...data, id: author.id })
-      : ipcHandle.sendSync('add-author', data)
+      ? await ipcHandle.invoke('update-author', { ...data, id: author.id })
+      : await ipcHandle.invoke('add-author', data)
     setAuthors(authors)
     toast.success(isEdit ? 'Author updated successfully' : 'Author added successfully')
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex flex-col items-center content-center gap-2"
+    >
       <Input
         placeholder="Name"
         label="Author Name"
@@ -50,8 +53,8 @@ export const Form = ({ author }: { author?: Author }) => {
         isInvalid={!!errors.description}
         {...register('description', { required: true })}
       />
-      <Button fullWidth color="primary" variant="flat" type="submit">
-        Add Author
+      <Button type="submit" color="primary" variant="flat">
+        {isEdit ? 'Update Author' : 'Add Author'}
       </Button>
     </form>
   )
