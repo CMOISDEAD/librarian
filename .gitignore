@@ -6,4 +6,4 @@ out
 
 .env
 
-*.db
+prisma/dev.db

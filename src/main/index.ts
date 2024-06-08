@@ -69,7 +69,7 @@ app.whenReady().then(() => {
    * HANDLERS
    */
 
-  // TODO: Migrate all this logic to prisma.
+  // TODO: divide all handlers in multiple files
 
   ipcMain.handle('get-store', async (_event) => {
     const authors = await prisma.author.findMany()
@@ -296,18 +296,6 @@ app.whenReady().then(() => {
     store.set('recents', recents)
 
     return await fetchRecents()
-  })
-
-  // FIX: OLD METHODS still on use...
-  ipcMain.handle('save-books', (_event, books) => {
-    store.set('books', books)
-    return store.get('books')
-  })
-
-  // save the recent books
-  ipcMain.handle('save-recent', (_event, recent) => {
-    store.set('recents', recent)
-    return store.get('recents')
   })
 
   createWindow()

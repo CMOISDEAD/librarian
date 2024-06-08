@@ -40,7 +40,7 @@ export const ActionBar = ({ open, toggle }) => {
 
   return (
     <div className="z-50 fixed right-0 flex flex-col gap-2 border-l border-divider p-1 bg-background/70 backdrop-blur-lg backdrop-saturate-150 h-full">
-      <Button isIconOnly color="primary" variant="light" size="sm" onPress={() => toggle()}>
+      <Button isIconOnly color="primary" variant="light" size="sm" onPress={toggle}>
         {open ? <RxArrowRight /> : <RxArrowLeft />}
       </Button>
       <AddBook />
