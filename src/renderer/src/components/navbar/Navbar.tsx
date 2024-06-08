@@ -2,6 +2,10 @@ import { RxArchive, RxGear, RxMagnifyingGlass, RxMoon, RxPerson, RxSun } from 'r
 import {
   Navbar as Bar,
   Button,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
   Input,
   Link,
   NavbarBrand,
@@ -10,6 +14,8 @@ import {
 } from '@nextui-org/react'
 import { useTheme } from 'next-themes'
 import { NotificationList } from './NotificationList'
+import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
 
 export const Navbar = () => {
   const { theme, setTheme } = useTheme()
@@ -21,11 +27,9 @@ export const Navbar = () => {
   return (
     <Bar isBordered maxWidth="full">
       <NavbarBrand className="text-foreground gap-2">
-        <Link href="/" className="gap-2 text-foreground">
-          <RxArchive />
-          <p className="font-bold text-inherit">Librarian</p>
-        </Link>
+        <NavigationList />
       </NavbarBrand>
+
       <NavbarContent justify="center">
         <NavbarItem>
           <Input placeholder="Search" startContent={<RxMagnifyingGlass />} color="primary" />
@@ -52,5 +56,50 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
     </Bar>
+  )
+}
+
+const NavigationList = () => {
+  const [active, setActive] = useState(0)
+  const location = useLocation()
+  const links = [
+    {
+      title: 'Librarian',
+      href: '/'
+    },
+    {
+      title: 'Authors',
+      href: '/authors'
+    },
+    {
+      title: 'Categories',
+      href: '/'
+    }
+  ]
+
+  useEffect(() => {
+    const { pathname } = location
+    const index = links.findIndex((link) => link.href === pathname)
+    if (index === -1) return setActive(0)
+    setActive(index)
+  }, [location])
+
+  return (
+    <Dropdown>
+      <DropdownTrigger>
+        <Button startContent={<RxArchive />} variant="light" color="primary">
+          <p className="font-bold text-foreground">{links[active].title}</p>
+        </Button>
+      </DropdownTrigger>
+      <DropdownMenu aria-label="link-actions" items={links}>
+        {links.map((link) => (
+          <DropdownItem key={link.title} textValue={link.title}>
+            <Link href={link.href} className="text-sm w-full" color="foreground">
+              {link.title}
+            </Link>
+          </DropdownItem>
+        ))}
+      </DropdownMenu>
+    </Dropdown>
   )
 }
