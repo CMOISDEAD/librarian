@@ -1,4 +1,4 @@
-import { RxArchive, RxGear, RxMagnifyingGlass, RxMoon, RxSun } from 'react-icons/rx'
+import { RxArchive, RxGear, RxMagnifyingGlass, RxMoon, RxPerson, RxSun } from 'react-icons/rx'
 import {
   Navbar as Bar,
   Button,
@@ -32,6 +32,11 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
+        <NavbarItem>
+          <Button isIconOnly as={Link} href="/authors" color="primary" variant="flat">
+            <RxPerson />
+          </Button>
+        </NavbarItem>
         <NavbarItem>
           <NotificationList />
         </NavbarItem>

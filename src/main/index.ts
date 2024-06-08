@@ -1,12 +1,13 @@
-import { v4 as uuidv4 } from 'uuid'
 import { app, shell, BrowserWindow, ipcMain, dialog } from 'electron'
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import Store from 'electron-store'
 import { schema } from './schema'
 import icon from '../../resources/icon.png?asset'
+import { PrismaClient } from '@prisma/client'
 
 const store = new Store({ schema })
+const prisma = new PrismaClient()
 
 function createWindow(): void {
   // Create the browser window.
@@ -54,79 +55,195 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // check if the id passed is the selected book
-  const checkSelected = (id: string) => {
-    const slected: any = store.get('selected')
-    return slected && slected.id === id
-  }
-
-  const checkRecents = (id: string) => {
-    const recents: any = store.get('recents') || []
-    return recents.some((r: any) => r.id === id)
-  }
-
-  const mapRecents = (book: any) => {
-    const recents: any = store.get('recents') || []
-    const newRecents = recents.map((r: any) => (r.id === book.id ? book : r))
-    store.set('recents', newRecents)
+  const getBooks = async () => {
+    const books = await prisma.book.findMany({
+      include: {
+        author: true,
+        category: true
+      }
+    })
+    return books
   }
 
   // handlers
-  // save the books
+  // TODO: Migrate all this logic to prisma and
+
+  ipcMain.on('get-store', async (event) => {
+    const authors = await prisma.author.findMany()
+    const categories = await prisma.category.findMany()
+    const books = await getBooks()
+    const selected = await prisma.book.findFirst({
+      where: { selected: true },
+      include: {
+        author: true,
+        category: true
+      }
+    })
+    event.returnValue = { authors, categories, books, selected }
+  })
+
+  ipcMain.on('get-authors', async (event) => {
+    const authors = await prisma.author.findMany()
+    event.returnValue = authors
+  })
+
+  ipcMain.on('get-author', async (event, id) => {
+    const author = await prisma.author.findUnique({ where: { id } })
+    event.returnValue = author
+  })
+
+  ipcMain.on('add-author', async (event, author) => {
+    await prisma.author.create({ data: author })
+    const all = await prisma.author.findMany()
+    event.returnValue = all
+  })
+
+  ipcMain.on('delete-author', async (event, id) => {
+    await prisma.author.delete({ where: { id } })
+    const all = await prisma.author.findMany()
+    event.returnValue = all
+  })
+
+  ipcMain.on('update-author', async (event, author) => {
+    await prisma.author.update({
+      where: {
+        id: author.id
+      },
+      data: author
+    })
+
+    const authors = await prisma.author.findMany()
+    event.returnValue = authors
+  })
+
+  ipcMain.on('save-selected', async (event, id) => {
+    await prisma.book.updateMany({
+      where: {
+        selected: true
+      },
+      data: {
+        selected: false
+      }
+    })
+    const book = await prisma.book.update({
+      where: {
+        id
+      },
+      data: {
+        selected: true
+      },
+      include: {
+        author: true,
+        category: true
+      }
+    })
+    event.returnValue = book
+  })
+
+  ipcMain.on('get-selected', async (event) => {
+    const book = await prisma.book.findFirst({
+      where: {
+        selected: true
+      },
+      include: {
+        author: true,
+        category: true
+      }
+    })
+    event.returnValue = book
+  })
+
+  ipcMain.on('get-book', async (event, id) => {
+    const book = await prisma.book.findUnique({ where: { id } })
+    event.returnValue = book
+  })
+
+  ipcMain.on('get-books', async (event) => {
+    const books = await getBooks()
+    event.returnValue = books
+  })
+
+  ipcMain.on('add-book', async (event, book) => {
+    const authorId = book.author
+    console.log(authorId)
+    delete book.author
+    await prisma.book.create({
+      data: {
+        ...book,
+        author: {
+          connectOrCreate: {
+            where: { name: authorId },
+            create: {
+              name: authorId
+            }
+          }
+        },
+        category: {
+          connectOrCreate: {
+            where: { name: book.category },
+            create: {
+              name: book.category
+            }
+          }
+        }
+      }
+    })
+
+    const books = await getBooks()
+    event.returnValue = books
+  })
+
+  ipcMain.on('delete-book', async (event, id) => {
+    await prisma.book.delete({ where: { id } })
+
+    const books = await getBooks()
+    event.returnValue = books
+  })
+
+  ipcMain.on('update-book', async (event, book) => {
+    const id = book.id
+    const author = book.author
+    delete book.id
+    delete book.authorId
+    delete book.categoryId
+    await prisma.book.update({
+      where: {
+        id
+      },
+      data: {
+        ...book,
+        author: {
+          connectOrCreate: {
+            where: { name: author },
+            create: {
+              name: author
+            }
+          }
+        },
+        category: {
+          connectOrCreate: {
+            where: { name: book.category },
+            create: {
+              name: book.category
+            }
+          }
+        }
+      }
+    })
+
+    const books = await getBooks()
+    event.returnValue = books
+  })
+
+  ipcMain.on('get-categories', async (event) => {
+    const categories = await prisma.category.findMany()
+    event.returnValue = categories
+  })
+
+  //FIX: OLD METHODS still on use...
   ipcMain.on('save-books', (event, books) => {
     store.set('books', books)
     event.returnValue = store.get('books')
-  })
-
-  // add a book
-  ipcMain.on('add-book', (event, book) => {
-    const books: any = store.get('books') || []
-    book.id = uuidv4()
-    store.set('books', [...books, book])
-    event.returnValue = store.get('books')
-  })
-
-  // get all books
-  ipcMain.on('get-books', (event) => {
-    event.returnValue = store.get('books')
-  })
-
-  // delete the book
-  ipcMain.on('delete-book', (event, book) => {
-    const books = store.get('books') as any[]
-    const newBooks = books.filter((b) => b.id !== book.id)
-    store.set('books', newBooks)
-    if (checkSelected(book.id)) {
-      store.set('selected', null)
-    }
-    if (checkRecents(book.id)) {
-      const recents: any = store.get('recents') || []
-      store.set(
-        'recents',
-        recents.filter((r: any) => r.id !== book.id)
-      )
-    }
-    event.returnValue = {
-      books: store.get('books'),
-      selected: store.get('selected')
-    }
-  })
-
-  // update the book
-  ipcMain.on('update-book', (event, book) => {
-    const books = store.get('books') as any[]
-    const newBooks = books.map((b) => (b.id === book.id ? book : b))
-    store.set('books', newBooks)
-    if (checkSelected(book.id)) store.set('selected', book)
-    if (checkRecents(book.id)) mapRecents(book)
-    event.returnValue = store.get('books')
-  })
-
-  // get the book by id
-  ipcMain.on('get-book', (event, id) => {
-    const books = store.get('books') as any[]
-    const book = books.find((b) => b.id === id)
-    event.returnValue = book
   })
 
   // save the recent books
@@ -145,17 +262,6 @@ app.whenReady().then(() => {
     else event.returnValue = null
   })
 
-  // save the selected book
-  ipcMain.on('save-selected', (event, selected) => {
-    store.set('selected', selected)
-    event.returnValue = store.get('selected')
-  })
-
-  // return the selected book
-  ipcMain.on('get-selected', (event) => {
-    event.returnValue = store.get('selected')
-  })
-
   // return the recents books
   ipcMain.on('get-recents', (event) => {
     event.returnValue = store.get('recents')
@@ -169,20 +275,15 @@ app.whenReady().then(() => {
     event.returnValue = store.get('recents')
   })
 
-  // return the store
-  ipcMain.on('get-store', (event) => {
-    event.returnValue = store.store
-  })
-
   // clear data
-  ipcMain.on('clear-data', (event) => {
+  ipcMain.on('clear-data', async (event) => {
     store.clear()
     event.returnValue = store.store
   })
 
   createWindow()
 
-  app.on('activate', function() {
+  app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()

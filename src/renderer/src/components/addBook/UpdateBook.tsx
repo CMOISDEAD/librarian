@@ -1,9 +1,9 @@
 import { Button, Modal, ModalContent, ModalBody, ModalFooter, ModalHeader } from '@nextui-org/react'
 import { Form } from './Form'
-import { IBook } from '@renderer/global'
+import { Book } from '@renderer/global'
 
 interface Props {
-  book: IBook
+  book: Book
   isOpen: boolean
   onOpenChange: () => void
 }

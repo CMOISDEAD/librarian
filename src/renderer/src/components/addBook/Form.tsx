@@ -1,102 +1,124 @@
-import { useFormik } from 'formik'
-import * as Yup from 'yup'
-import { Button, Image, Input } from '@nextui-org/react'
+import { Autocomplete, AutocompleteItem, Button, Image, Input } from '@nextui-org/react'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
 import { useEffect } from 'react'
 import { RxFilePlus } from 'react-icons/rx'
-import { IBook } from '@renderer/global'
+import { Book } from '@renderer/global'
+import { SubmitHandler, useForm } from 'react-hook-form'
 
-interface Props {
-  book?: IBook
+type Inputs = {
+  title: string
+  author: string | null
+  description: string
+  cover: string
+  year: number
+  category: string
+  pages: number
+  path: string
 }
 
-export const Form = ({ book }: Props) => {
+export const Form = ({ book }: { book?: Book }) => {
   const isEdit = !!book
   const ipcHandle = window.electron.ipcRenderer
-  const { setBooks, setSelected, setRecents } = useLibraryStore((state) => state)
-  const { handleSubmit, values, errors, touched, getFieldProps, setFieldValue } = useFormik({
-    initialValues: book || initialValues,
-    validationSchema,
-    onSubmit: (values) => {
-      const books = isEdit
-        ? ipcHandle.sendSync('update-book', { ...values, id: book.id })
-        : ipcHandle.sendSync('add-book', { ...values })
-      setBooks(books)
-      toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
-      if (book) {
-        const selected = ipcHandle.sendSync('get-selected')
-        const recents = ipcHandle.sendSync('get-recents')
-        setSelected(selected)
-        setRecents(recents)
-      }
-    }
+  const { authors, categories, setBooks, setSelected, setRecents } = useLibraryStore(
+    (state) => state
+  )
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    formState: { errors, touchedFields: touched }
+  } = useForm<Inputs>({
+    defaultValues: (book || initialValues) as Inputs
   })
 
   useEffect(() => {
     if (!book) return
-    setFieldValue('path', book.path)
+    setValue('path', book.path)
+    setValue('author', book.author.name)
+    setValue('category', book.category.name)
   }, [])
+
+  const onSubmit: SubmitHandler<Inputs> = (values) => {
+    console.log('values', values)
+    const books = isEdit
+      ? ipcHandle.sendSync('update-book', { ...values, id: book.id })
+      : ipcHandle.sendSync('add-book', { ...values })
+    console.log(books)
+    setBooks(books)
+    toast.success(isEdit ? 'Book updated successfully' : 'Book added successfully')
+    if (book) {
+      const selected = ipcHandle.sendSync('get-selected')
+      const recents = ipcHandle.sendSync('get-recents')
+      setSelected(selected)
+      setRecents(recents)
+    }
+  }
 
   const handlePath = () => {
     const path = ipcHandle.sendSync('get-pdf-path')
-    setFieldValue('path', path)
+    setValue('path', path)
   }
 
   return (
     <div className="flex gap-2">
-      <form noValidate onSubmit={handleSubmit} className="flex flex-col gap-2 flex-grow">
+      <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-2 flex-grow">
         <Input
           label="Title"
           placeholder="Title"
-          {...getFieldProps('title')}
+          {...register('title', { required: true, minLength: 3 })}
           isInvalid={touched.title && !!errors.title}
-        // errorMessage={touched.title && errors.title}
         />
-        <Input
+        <Autocomplete
+          allowsCustomValue
           label="Author"
-          placeholder="Author"
-          {...getFieldProps('author')}
+          variant="flat"
+          defaultItems={authors.map((author) => ({ label: author.name, value: author.name }))}
+          onInputChange={(value) => setValue('author', value)}
           isInvalid={touched.author && !!errors.author}
-        // errorMessage={touched.author && errors.author}
-        />
+        >
+          {(item) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+        </Autocomplete>
         <Input
           label="Description"
           placeholder="Description"
-          {...getFieldProps('description')}
+          {...register('description', { required: true, minLength: 3 })}
           isInvalid={touched.description && !!errors.description}
-        // errorMessage={touched.description && errors.description}
         />
         <Input
           label="Cover"
           placeholder="Cover"
-          {...getFieldProps('cover')}
+          {...register('cover', { required: true })}
           isInvalid={touched.cover && !!errors.cover}
-        // errorMessage={touched.cover && errors.cover}
         />
         <div className="flex gap-2">
           <Input
             label="Year"
             placeholder="Year"
-            {...getFieldProps('year')}
+            {...register('year', { required: true, valueAsNumber: true })}
             isInvalid={touched.year && !!errors.year}
-          // errorMessage={touched.year && errors.year}
           />
-          <Input
-            label="Genre"
-            placeholder="Genre"
-            {...getFieldProps('genre')}
-            isInvalid={touched.genre && !!errors.genre}
-          // errorMessage={touched.genre && errors.genre}
-          />
+          <Autocomplete
+            allowsCustomValue
+            label="Category"
+            variant="flat"
+            defaultItems={categories.map((category) => ({
+              label: category.name,
+              value: category.name
+            }))}
+            onInputChange={(value) => setValue('category', value)}
+            isInvalid={touched.category && !!errors.category}
+          >
+            {(item) => <AutocompleteItem key={item.value}>{item.label}</AutocompleteItem>}
+          </Autocomplete>
         </div>
         <div className="flex gap-2">
           <Input
             label="Pages"
             placeholder="0"
-            {...getFieldProps('pages')}
-            isInvalid={touched.pages && !!errors.pages}
-          // errorMessage={touched.path && errors.path}
+            {...register('pages', { required: true, valueAsNumber: true })}
+            isInvalid={!!errors.pages}
           />
           <Button
             fullWidth
@@ -115,7 +137,7 @@ export const Form = ({ book }: Props) => {
       </form>
       <Image
         isBlurred
-        src={values.cover}
+        src={watch('cover')}
         alt="placeholder image"
         fallbackSrc="https://placehold.co/256x424/EEE/31343C?font=lato&text=Cover+Not+Found"
         className="w-64 h-full object-cover max-h-[424px]"
@@ -124,35 +146,13 @@ export const Form = ({ book }: Props) => {
   )
 }
 
-type Inputs = {
-  title: string
-  author: string
-  description: string
-  cover: string
-  year: number
-  genre: string
-  pages: number
-  path: string
-}
-
 const initialValues: Inputs = {
   title: '',
-  author: '',
+  author: null,
   description: '',
   cover: '',
   year: 0,
-  genre: '',
+  category: '',
   pages: 0,
   path: ''
 }
-
-const validationSchema = Yup.object({
-  title: Yup.string().min(3, 'min 3 characters').required('required'),
-  author: Yup.string().min(3, 'min 3 characters').required('required'),
-  description: Yup.string().min(3, 'min 3 characters').required('required'),
-  cover: Yup.string().url('invalid url').required('required'),
-  year: Yup.number().min(0, 'min 0').required('required'),
-  genre: Yup.string().min(3, 'min 3 characters').required('required'),
-  pages: Yup.number().min(0, 'min 0').required('required'),
-  path: Yup.string().required('required')
-})

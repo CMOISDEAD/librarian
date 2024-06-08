@@ -1,10 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { Card, CardBody } from '@nextui-org/react'
-import { useLibraryStore } from '@renderer/store/store'
 import { Details } from './Details'
+import { useLibraryStore } from '@renderer/store/store'
 
 export const Overview = ({ open }) => {
-  const { selected: book } = useLibraryStore((state) => state)
+  const { selected } = useLibraryStore((state) => state)
 
   return (
     <AnimatePresence>
@@ -18,8 +18,8 @@ export const Overview = ({ open }) => {
         >
           <Card className="flex flex-col gap-2 content-center h-[90%]">
             <CardBody className="flex flex-col items-stretch gap-2">
-              {book ? (
-                <Details book={book} />
+              {selected ? (
+                <Details book={selected} />
               ) : (
                 <div className="flex content-center items-center justify-center h-full">
                   <p className="text-content4 text-sm">Select a book to view its details.</p>

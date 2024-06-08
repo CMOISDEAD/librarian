@@ -1,4 +1,4 @@
-import { IBook } from '@renderer/global'
+import { Book as IBook } from '@renderer/global'
 import { Card, CardBody, Image } from '@nextui-org/react'
 import { useLibraryStore } from '@renderer/store/store'
 
@@ -12,7 +12,7 @@ export const Book = ({ book }: Props) => {
   const { setSelected, setRecents } = useLibraryStore((state) => state)
 
   const handleSelect = () => {
-    const selected: IBook = ipcHandler.sendSync('save-selected', book)
+    const selected: IBook = ipcHandler.sendSync('save-selected', book.id)
     setSelected(selected)
   }
 

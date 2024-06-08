@@ -18,18 +18,18 @@ export const ActionBar = ({ open, toggle }) => {
   const {
     selected: selectedBook,
     setBooks,
-    setSelected,
-    setRecents
+    setRecents,
+    setSelected
   } = useLibraryStore((state) => state)
   const { isOpen, onOpen, onOpenChange } = useDisclosure()
 
   const handleDelete = () => {
     if (!selectedBook) return
-    const { books, selected } = ipcHandle.sendSync('delete-book', selectedBook)
+    const books = ipcHandle.sendSync('delete-book', selectedBook.id)
     const recents = ipcHandle.sendSync('get-recents')
     setBooks(books)
+    setSelected(null)
     setRecents(recents)
-    setSelected(selected)
     toast.success('Book deleted successfully')
   }
 
