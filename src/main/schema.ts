@@ -13,11 +13,7 @@ export const schema = {
   recents: {
     type: 'array',
     items: {
-      type: 'object',
-      properties: {
-        id: { type: 'string' },
-        title: { type: 'string' }
-      }
+      type: 'number'
     },
     default: []
   },

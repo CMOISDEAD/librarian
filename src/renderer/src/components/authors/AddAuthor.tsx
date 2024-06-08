@@ -15,8 +15,8 @@ export const AddAuthor = () => {
 
   return (
     <>
-      <Button isIconOnly color="primary" variant="light" size="sm" onPress={onOpen}>
-        <RxPlus />
+      <Button color="primary" variant="light" size="sm" onPress={onOpen} startContent={<RxPlus />}>
+        Add an Author to the Library
       </Button>
       <Modal size="4xl" isOpen={isOpen} onOpenChange={onOpenChange}>
         <ModalContent>

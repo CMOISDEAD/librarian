@@ -91,7 +91,13 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('get-author', async (_event, id) => {
-    const author = await prisma.author.findUnique({ where: { id } })
+    id = parseInt(id)
+    const author = await prisma.author.findUnique({
+      where: { id },
+      include: {
+        books: true
+      }
+    })
     return author
   })
 
@@ -169,7 +175,6 @@ app.whenReady().then(() => {
 
   ipcMain.handle('add-book', async (_event, book) => {
     const authorId = book.author
-    console.log(authorId)
     delete book.author
     await prisma.book.create({
       data: {
@@ -199,6 +204,9 @@ app.whenReady().then(() => {
 
   ipcMain.handle('delete-book', async (_event, id) => {
     await prisma.book.delete({ where: { id } })
+    const recents = store.get('recents') as number[]
+    recents.filter((r) => r !== id)
+    store.set('recents', recents)
 
     const books = await getBooks()
     return books
@@ -244,19 +252,6 @@ app.whenReady().then(() => {
     return categories
   })
 
-  //FIX: OLD METHODS still on use...
-  ipcMain.handle('save-books', (_event, books) => {
-    store.set('books', books)
-    return store.get('books')
-  })
-
-  // save the recent books
-  ipcMain.handle('save-recent', (_event, recent) => {
-    store.set('recents', recent)
-    return store.get('recents')
-  })
-
-  // manage the pdf path
   ipcMain.handle('get-pdf-path', async (_event) => {
     const { canceled, filePaths } = await dialog.showOpenDialog({
       properties: ['openFile'],
@@ -266,20 +261,53 @@ app.whenReady().then(() => {
     else return null
   })
 
-  // return the recents books
-  ipcMain.handle('get-recents', (_event) => {
-    return store.get('recents')
-  })
-
-  // add a recent book
-  ipcMain.handle('add-recent', (_event) => {
-    return []
-  })
-
-  // clear data
   ipcMain.handle('clear-data', async (_event) => {
     store.clear()
     return store.store
+  })
+
+  const fetchRecents = async () => {
+    const recents = store.get('recents') as number[]
+    const books = await prisma.book.findMany({
+      where: {
+        id: {
+          in: recents
+        }
+      },
+      include: {
+        author: true,
+        category: true
+      }
+    })
+
+    return books
+  }
+
+  ipcMain.handle('get-recents', async (_event) => {
+    const books = await fetchRecents()
+    return books
+  })
+
+  ipcMain.handle('add-recent', async (_event, id) => {
+    const recents = store.get('recents') as number[]
+    recents.filter((r) => r !== id)
+    if (recents.length > 5) recents.shift()
+    recents.push(id)
+    store.set('recents', recents)
+
+    return await fetchRecents()
+  })
+
+  // FIX: OLD METHODS still on use...
+  ipcMain.handle('save-books', (_event, books) => {
+    store.set('books', books)
+    return store.get('books')
+  })
+
+  // save the recent books
+  ipcMain.handle('save-recent', (_event, recent) => {
+    store.set('recents', recent)
+    return store.get('recents')
   })
 
   createWindow()

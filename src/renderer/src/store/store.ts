@@ -1,14 +1,14 @@
-import { Author, Book, Category } from '@renderer/global'
+import { IAuthor, Book, Category } from '@renderer/global'
 import { create } from 'zustand'
 
 interface Store {
   selected: Book | null
   books: Book[]
   recents: Book[]
-  authors: Author[]
+  authors: IAuthor[]
   categories: Category[]
   setSelected: (book: Book | null) => void
-  setAuthors: (authors: Author[]) => void
+  setAuthors: (authors: IAuthor[]) => void
   setRecents: (books: Book[]) => void
   setCategories: (categories: Category[]) => void
   setBooks: (books: Book[]) => void

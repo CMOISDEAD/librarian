@@ -1,7 +1,7 @@
 export interface Book {
   id: number
   title: string
-  author: Author // Relación con el modelo Author
+  author: IAuthor // Relación con el modelo Author
   authorId: number
   description: string
   cover: string
@@ -12,7 +12,7 @@ export interface Book {
   pages: number
 }
 
-export interface Author {
+export interface IAuthor {
   id: number
   name: string
   image?: string | null // La imagen es opcional

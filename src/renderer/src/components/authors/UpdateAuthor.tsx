@@ -7,12 +7,12 @@ import {
   ModalHeader,
   useDisclosure
 } from '@nextui-org/react'
-import { Author } from '@renderer/global'
+import { IAuthor } from '@renderer/global'
 import { Form } from './Form'
 import { RxPencil2 } from 'react-icons/rx'
 
 interface Props {
-  author: Author
+  author: IAuthor
 }
 
 export const UpdateAuthor = ({ author }: Props) => {

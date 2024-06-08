@@ -2,9 +2,18 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Card, CardBody } from '@nextui-org/react'
 import { Details } from './Details'
 import { useLibraryStore } from '@renderer/store/store'
+import { useEffect } from 'react'
 
 export const Overview = ({ open }) => {
-  const { selected } = useLibraryStore((state) => state)
+  const ipcHandler = window.electron.ipcRenderer
+  const { selected, setSelected } = useLibraryStore((state) => state)
+
+  useEffect(() => {
+    ipcHandler
+      .invoke('get-selected')
+      .then((book) => setSelected(book))
+      .catch((err) => console.error(err))
+  }, [])
 
   return (
     <AnimatePresence>

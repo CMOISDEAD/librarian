@@ -19,7 +19,7 @@ export const Details = ({ book }: { book: Book }) => {
       </div>
       <ul className="text-gray-500">
         <li className="flex gap-2 content-center items-center">
-          <Link href={`/authors`}>
+          <Link href={`/authors/${book.author.id}`}>
             <RxPerson />
             <span>{book.author?.name}</span>
           </Link>

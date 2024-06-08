@@ -1,5 +1,5 @@
 import { Button, Input } from '@nextui-org/react'
-import { Author } from '@renderer/global'
+import { IAuthor } from '@renderer/global'
 import { useLibraryStore } from '@renderer/store/store'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -10,7 +10,7 @@ type Inputs = {
   description: string
 }
 
-export const Form = ({ author }: { author?: Author }) => {
+export const Form = ({ author }: { author?: IAuthor }) => {
   const isEdit = !!author
   const {
     register,

@@ -1,9 +1,18 @@
+import { useEffect } from 'react'
 import { AddAuthor } from '@renderer/components/authors/AddAuthor'
 import { AuthorCard } from '@renderer/components/authors/AuthorCard'
 import { useLibraryStore } from '@renderer/store/store'
 
 export const Authors = () => {
-  const { authors } = useLibraryStore((state) => state)
+  const ipcHandler = window.electron.ipcRenderer
+  const { authors, setAuthors } = useLibraryStore((state) => state)
+
+  useEffect(() => {
+    ipcHandler
+      .invoke('get-authors')
+      .then((authors) => setAuthors(authors))
+      .catch((err) => console.error(err))
+  }, [])
 
   return (
     <div className="container mx-auto">
