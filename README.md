@@ -1,16 +1,12 @@
 # Librarian
 
-<p align="center">
-  <img src="https://github.com/CMOISDEAD/librarian/assets/51010598/b9d7cf9f-afa9-4826-939d-5cc93ccdc1de" />
-</p>
+<img src="https://github.com/CMOISDEAD/librarian/assets/51010598/b9d7cf9f-afa9-4826-939d-5cc93ccdc1de" align="left" style="width: 210px;"/>
 
 <div align="center">
-
-![GitHub stars](https://img.shields.io/github/stars/cmoisdead/librarian)
-![GitHub issues](https://img.shields.io/github/issues/cmoisdead/librarian)
-![GitHub forks](https://img.shields.io/github/forks/cmoisdead/librarian)
-![GitHub license](https://img.shields.io/github/license/CMOISDEAD/librarian)
-
+  <img src="https://img.shields.io/github/stars/cmoisdead/librarian" alt="GitHub stars">
+  <img src="https://img.shields.io/github/issues/cmoisdead/librarian" alt="GitHub issues">
+  <img src="https://img.shields.io/github/forks/cmoisdead/librarian" alt="GitHub forks">
+  <img src="https://img.shields.io/github/license/CMOISDEAD/librarian" alt="GitHub license">
 </div>
 
 > [!IMPORTANT]
