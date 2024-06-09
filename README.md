@@ -15,7 +15,7 @@
 
 > The librarian is the torchbearer, inheriting the legacy of the next library's vision, nurturing its spirit, and guiding its evolution into the future.
 
-Created with the intention of being a simple and easy-to-use book management system, Librarian is a desktop application build over web technologies, that allows you to manage your book collection. You can add, remove, and edit books, authors, categories and much more, all in a simple and intuitive way.
+Created with the intention of being a simple and easy-to-use book management system, Librarian is a desktop application build over web technologies, that allows you to manage your book collection. You can add, remove, and edit books, authors, categories and much more.
 
 ## 📷 Showcase
 
