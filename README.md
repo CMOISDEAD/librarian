@@ -1,6 +1,6 @@
 # Librarian
 
-<img src="https://github.com/CMOISDEAD/librarian/assets/51010598/b9d7cf9f-afa9-4826-939d-5cc93ccdc1de" align="left" style="width: 210px;"/>
+<img src="https://github.com/CMOISDEAD/librarian/assets/51010598/b9d7cf9f-afa9-4826-939d-5cc93ccdc1de" align="right" style="width: 210px;"/>
 
 <div align="center">
   <img src="https://img.shields.io/github/stars/cmoisdead/librarian" alt="GitHub stars">
