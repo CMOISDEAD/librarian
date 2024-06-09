@@ -42,4 +42,4 @@ Created with the intention of being a simple and easy-to-use book management sys
 
 ## 📝 License
 
-This project is licensed under the GPL-3.0 License - see the [LICENSE](https://github.com/CMOISDEAD/librarian/LICENSE) file for details.
+This project is licensed under the GPL-3.0 License - see the [LICENSE](https://github.com/CMOISDEAD/librarian/blob/master/LICENSE) file for details.
