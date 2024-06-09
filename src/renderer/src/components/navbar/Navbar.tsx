@@ -21,7 +21,6 @@ import {
   NavbarItem
 } from '@nextui-org/react'
 import { useTheme } from 'next-themes'
-import { NotificationList } from './NotificationList'
 import { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 
@@ -44,9 +43,6 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
       <NavbarContent justify="end">
-        <NavbarItem>
-          <NotificationList />
-        </NavbarItem>
         <NavbarItem>
           <Button isIconOnly color="primary" variant="flat" onPress={handleThemeChange}>
             {theme === 'dark' ? <RxSun /> : <RxMoon />}

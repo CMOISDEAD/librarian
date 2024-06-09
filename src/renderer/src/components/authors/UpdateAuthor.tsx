@@ -20,7 +20,7 @@ export const UpdateAuthor = ({ author }: Props) => {
 
   return (
     <>
-      <Button onPress={onOpen}>
+      <Button isIconOnly size="sm" variant="flat" color="primary" onPress={onOpen}>
         <RxPencil2 />
       </Button>
       <Modal size="4xl" isOpen={isOpen} onOpenChange={onOpenChange}>

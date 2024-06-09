@@ -1,13 +1,4 @@
-import {
-  Button,
-  ButtonGroup,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  Image,
-  Link
-} from '@nextui-org/react'
+import { Button, Card, CardBody, CardHeader, Image, Link } from '@nextui-org/react'
 import { IAuthor } from '@renderer/global'
 import { useLibraryStore } from '@renderer/store/store'
 import toast from 'react-hot-toast'
@@ -37,31 +28,38 @@ export const AuthorCard = ({ author }: Props) => {
 
   return (
     <Card>
-      <CardHeader className="flex content-center items-center justify-center">
-        <Image
-          isBlurred
-          width={112}
-          height={112}
-          src={author.image!}
-          fallbackSrc="https://placehold.co/112x112/EEE/31343C?font=lato&text=No+Image"
-          alt={`author ${author.name} image`}
-          className="object-cover h-28 w-28"
-        />
-      </CardHeader>
-      <CardBody>
-        <Link href={`/authors/${author.id}`}>
-          <h3 className="text-xl font-bold capitalize">{author.name}</h3>
-        </Link>
-        <p className="text-gray-500 line-clamp-3">{author.description}</p>
-      </CardBody>
-      <CardFooter>
-        <ButtonGroup fullWidth variant="flat" size="sm">
+      <CardHeader className="flex content-center items-center justify-around">
+        <div className="flex content-center items-center justify-evenly gap-2 w-full">
+          <Image
+            isBlurred
+            width={80}
+            height={80}
+            radius="full"
+            src={author.image!}
+            fallbackSrc="https://placehold.co/80x80/EEE/31343C?font=lato&text=No+Image"
+            alt={`author ${author.name} image`}
+            className="object-cover h-20 w-20"
+          />
+          <Link
+            href={`/authors/${author.id}`}
+            className="flex flex-col gap-2 justify-center content-center items-center w-3/5"
+          >
+            <h3 className="text-lg font-bold capitalize line-clamp-1 text-center">{author.name}</h3>
+            <p className="text-sm text-foreground-400">Writter & Author</p>
+          </Link>
+        </div>
+        <div className="flex flex-col gap-2">
           <UpdateAuthor author={author} />
-          <Button color="danger" onPress={handleRemove}>
+          <Button isIconOnly size="sm" variant="flat" color="danger" onPress={handleRemove}>
             <RxTrash />
           </Button>
-        </ButtonGroup>
-      </CardFooter>
+        </div>
+      </CardHeader>
+      <CardBody>
+        <p className="text-sm text-foreground-400 line-clamp-3">
+          {author.description || 'No description provided for this author.'}
+        </p>
+      </CardBody>
     </Card>
   )
 }

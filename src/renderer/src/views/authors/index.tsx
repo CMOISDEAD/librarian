@@ -18,7 +18,7 @@ export const Authors = () => {
     <div className="container mx-auto">
       <main className="my-3">
         <div className="flex content-center justify-between">
-          <h2 className="text-2xl font-bold">Here are the authors, enjoy!</h2>
+          <h2 className="text-2xl font-bold">Camilo's Favorite Bookworms</h2>
           <AddAuthor />
         </div>
         <div className="my-4 grid grid-cols-1 grid-flow-rows gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
