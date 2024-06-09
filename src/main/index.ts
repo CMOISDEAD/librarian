@@ -248,7 +248,11 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('get-categories', async (_event) => {
-    const categories = await prisma.category.findMany()
+    const categories = await prisma.category.findMany({
+      include: {
+        books: true
+      }
+    })
     return categories
   })
 

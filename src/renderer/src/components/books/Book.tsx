@@ -37,6 +37,7 @@ export const Book = ({ book }: Props) => {
           isBlurred
           src={book.cover}
           alt={book.title}
+          fallbackSrc="https://placehold.co/192x192/EEE/31343C?font=lato&text=Cover+Not+Found"
           classNames={{
             img: 'w-full h-full object-cover',
             wrapper: 'w-full h-full'

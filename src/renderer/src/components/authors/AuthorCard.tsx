@@ -36,15 +36,14 @@ export const AuthorCard = ({ author }: Props) => {
   }
 
   return (
-    <Card className="bg-content1/30" shadow="lg">
+    <Card>
       <CardHeader className="flex content-center items-center justify-center">
         <Image
-          removeWrapper
+          isBlurred
           width={112}
           height={112}
-          radius="full"
-          src={author.image || 'https://via.placeholder.com/112x112'}
-          fallbackSrc="https://via.placeholder.com/112x112"
+          src={author.image!}
+          fallbackSrc="https://placehold.co/112x112/EEE/31343C?font=lato&text=No+Image"
           alt={`author ${author.name} image`}
           className="object-cover h-28 w-28"
         />

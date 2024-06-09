@@ -1,4 +1,12 @@
-import { RxArchive, RxGear, RxMagnifyingGlass, RxMoon, RxPerson, RxSun } from 'react-icons/rx'
+import {
+  RxArchive,
+  RxGear,
+  RxMagnifyingGlass,
+  RxMoon,
+  RxPerson,
+  RxSun,
+  RxCardStack
+} from 'react-icons/rx'
 import {
   Navbar as Bar,
   Button,
@@ -37,11 +45,6 @@ export const Navbar = () => {
       </NavbarContent>
       <NavbarContent justify="end">
         <NavbarItem>
-          <Button isIconOnly as={Link} href="/authors" color="primary" variant="flat">
-            <RxPerson />
-          </Button>
-        </NavbarItem>
-        <NavbarItem>
           <NotificationList />
         </NavbarItem>
         <NavbarItem>
@@ -65,15 +68,18 @@ const NavigationList = () => {
   const links = [
     {
       title: 'Librarian',
-      href: '/'
+      href: '/',
+      icon: <RxArchive />
     },
     {
       title: 'Authors',
-      href: '/authors'
+      href: '/authors',
+      icon: <RxPerson />
     },
     {
       title: 'Categories',
-      href: '/'
+      href: '/categories',
+      icon: <RxCardStack />
     }
   ]
 
@@ -87,13 +93,13 @@ const NavigationList = () => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <Button startContent={<RxArchive />} variant="light" color="primary">
+        <Button startContent={links[active].icon} variant="light" color="primary">
           <p className="font-bold text-foreground">{links[active].title}</p>
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="link-actions" items={links}>
+      <DropdownMenu aria-label="link-actions" items={links} color="primary" variant="flat">
         {links.map((link) => (
-          <DropdownItem key={link.title} textValue={link.title}>
+          <DropdownItem key={link.title} textValue={link.title} startContent={link.icon}>
             <Link href={link.href} className="text-sm w-full" color="foreground">
               {link.title}
             </Link>

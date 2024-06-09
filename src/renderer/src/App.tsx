@@ -7,6 +7,7 @@ import { useEffect } from 'react'
 import { useLibraryStore } from './store/store'
 import { Authors } from './views/authors/'
 import { Author } from './views/authors/Author'
+import { Categories } from './views/categories'
 
 function App() {
   const ipcHandle = window.electron.ipcRenderer
@@ -30,6 +31,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/authors" element={<Authors />} />
           <Route path="/authors/:authorId" element={<Author />} />
+          <Route path="/categories" element={<Categories />} />
         </Route>
       </Routes>
     </Providers>
