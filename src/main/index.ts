@@ -6,8 +6,17 @@ import { schema } from './schema'
 import icon from '../../resources/icon.png?asset'
 import { PrismaClient } from '@prisma/client'
 
+const devdb = 'file:' + join(__dirname, '../../prisma/database.db')
+const proddb = `file:${join(app.getPath('userData'), 'database.db')}`
+
 const store = new Store({ schema })
-const prisma = new PrismaClient()
+const prisma = new PrismaClient({
+  datasources: {
+    db: {
+      url: is.dev ? devdb : proddb
+    }
+  }
+})
 
 function createWindow(): void {
   // Create the browser window.

@@ -9,13 +9,25 @@
   <img src="https://img.shields.io/github/license/CMOISDEAD/librarian" alt="GitHub license">
 </div>
 
-> [!IMPORTANT]
+> [!NOTE]
 > This is a work-in-progress and not the finished product.
 > Librarian will be constantly updated and is not yet ready for its first release. But soon it will be.
 
 > The librarian is the torchbearer, inheriting the legacy of the next library's vision, nurturing its spirit, and guiding its evolution into the future.
 
 Created with the intention of being a simple and easy-to-use book management system, Librarian is a desktop application build over web technologies, that allows you to manage your book collection. You can add, remove, and edit books, authors, categories and much more.
+
+## Current Status
+
+> [!IMPORTANT]
+> This project is currently **under development** and is **NOT** yet ready for its first release.
+> Currently you can use the development version of the application running `pnpm run dev`, but if you try to build the application probably you will face
+> with the issue of the database have no the tables created. This is because the database is created in the first run of the application with no prisma migration.
+> To solve this issue you can copy the `prisma/database.db` file to the your `userData` directory.
+
+### Discussions
+
+- Should we still using prisma or try another ORM/Database?
 
 ## 📷 Showcase
 
